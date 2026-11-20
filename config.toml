@@ -1,0 +1,50 @@
+# freespr config — flat TOML, hand-edit freely.
+# This shipped copy is the reference; the live one is ~/.config/freespr/config.toml
+# (created by `freespr init`; edits there are never clobbered by reinstall).
+# Any missing/garbled key silently falls back to its built-in default, so a bad
+# edit never takes the agent down. The OpenAI API key is NOT here — it lives in the
+# macOS Keychain (service "freespr", account "openai-api-key").
+
+# --- Trigger ---
+# Hold either modifier ALONE; the toggle fires the instant it's held this long (while still
+# down). A quick tap, or the key used in a shortcut (e.g. Right-Cmd+C), passes through untouched.
+trigger_right_cmd  = true     # Right-Command (keycode 0x36) — Mac keyboards
+trigger_right_ctrl = true     # Right-Control (keycode 0x3E) — Windows keyboards
+hold_threshold_ms  = 1250     # ms held-alone before it fires; long enough to never trigger by accident
+
+# --- Recording ---
+silence_timeout_sec = 30      # auto-stop after this many seconds of silence
+max_recording_sec   = 600     # hard cap on one recording (10 min); 0 = no cap
+
+# --- Output ---
+# auto_paste = false: the result goes to your clipboard and a third chime plays when it's ready,
+# so you paste it yourself wherever you are (no surprise paste at the wrong cursor). This is the
+# default. Set true to type it at the cursor automatically (uses the same Accessibility grant the
+# hotkey already needs).
+auto_paste = false
+# auto_paste mode only: delay before restoring your previous clipboard after the auto-paste.
+# Raise it for slow/busy apps (e.g. heavy Electron) that read the clipboard late.
+paste_restore_ms = 250
+
+# --- Models ---
+transcription_model = "gpt-transcribe"
+# cleanup_model must be a reasoning model: cleanup sends reasoning_effort = cleanup_effort,
+# and a non-reasoning model rejects it (HTTP 400, so every dictation falls back to raw).
+cleanup_model       = "gpt-6-luna"
+# none, low, medium, high, xhigh or max. Higher reads your intent better but takes longer.
+cleanup_effort      = "xhigh"
+
+# --- Cleanup ---
+cleanup_default = true        # true = clean by default; false = raw (transcribe-only) by default
+# When cleaning, also paste the raw transcript above the cleaned text (blank line between).
+# Handy for feeding an LLM: it can recover your intent if the cleanup gets weird. Leave it false
+# to get only the cleaned text.
+include_raw_transcript = false
+# After the model: em dashes to hyphens, curly quotes to straight, emoji removed, and (cleanup
+# only) stock AI phrases dropped or swapped. false = deliver the text as the model wrote it.
+strip_ai_tells = true
+
+# --- Indicator ---
+# Screen-edge glow frame: blue breathing = recording, green = transcribing, purple bloom =
+# text delivered. "glow" (default) or "off".
+indicator = "glow"

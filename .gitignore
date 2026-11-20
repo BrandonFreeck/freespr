@@ -1,0 +1,4 @@
+# SwiftPM build output + local tooling state
+.build/
+.swiftpm/
+Package.resolved

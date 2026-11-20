@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  freespr.app bundle Info.plist. A real bundle id (com.freespr.agent) + usage descriptions is what
+  lets macOS attribute the launchd agent's TCC grants (Accessibility, Microphone) to a named app
+  and show it in the Privacy panes. Paired with `AssociatedBundleIdentifiers` in the LaunchAgent plist
+  (see Lifecycle.writeLaunchAgent), this is what makes the HEADLESS daemon able to hold its grants as
+  the bundle. (Accessibility's trust prompt isn't driven by an Info.plist string — the daemon requests
+  it via AXIsProcessTrustedWithOptions.) LSUIElement = background agent (no Dock icon / menu bar).
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>freespr</string>
+    <key>CFBundleDisplayName</key>
+    <string>freespr</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.freespr.agent</string>
+    <key>CFBundleExecutable</key>
+    <string>freespr</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <!-- Both version strings are set by `make install` from freesprVersion in
+         Sources/freespr/CLI.swift (the one version source); these values are placeholders. -->
+    <key>CFBundleVersion</key>
+    <string>0.1.0</string>
+    <key>CFBundleShortVersionString</key>
+    <string>0.1.0</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>14.0</string>
+    <key>LSUIElement</key>
+    <true/>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>freespr records your voice to transcribe your dictation.</string>
+</dict>
+</plist>

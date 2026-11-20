@@ -1,0 +1,12 @@
+# freespr vocabulary: names and jargon the transcriber should spell your way.
+# One term per line, or several on one line separated by commas. Lines starting with # are skipped.
+# The list goes out as the transcription prompt on every dictation, up to 3,000 characters.
+# File order is priority: terms past the cap are left out, and `freespr status` says how many.
+# Replace these examples with your own names, products and jargon.
+vLLM
+Kubernetes
+PostgreSQL
+TypeScript
+GitHub
+macOS
+Homebrew
