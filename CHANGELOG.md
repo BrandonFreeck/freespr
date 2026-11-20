@@ -18,6 +18,7 @@ First public release.
 - `freespr uninstall --purge` removes everything FreeSPR installed, including its permission
   entries, except the `make cert` signing certificate, which it tells you how to remove.
 - `make cert` creates a local signing certificate so permissions survive rebuilds. Only
-  `codesign` may use its private key.
-- A recording left behind by an interrupted session is deleted at the next start, once it's 15
-  minutes old.
+  `codesign` may use its private key directly; the README explains the trade-off that any program
+  running as you can still sign as FreeSPR through `codesign`.
+- A recording left behind by an interrupted session is deleted when FreeSPR starts and finds it
+  unchanged for at least 15 minutes, and by `uninstall --purge`.

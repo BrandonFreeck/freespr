@@ -35,7 +35,7 @@ at login, and you manage it from Terminal.
 ```sh
 git clone https://github.com/BrandonFreeck/freespr.git
 cd freespr
-make cert         # one time, optional but recommended; asks for your login password (see below)
+make cert         # one time, optional; asks for your login password (read the trade-off below)
 make install      # builds ~/Applications/freespr.app and links ~/.local/bin/freespr to it
 freespr init      # stores your API key, asks one question, requests the 2 permissions, starts the agent
 freespr status    # every row should be green
@@ -44,20 +44,27 @@ freespr status    # every row should be green
 If `~/.local/bin` isn't on your PATH, `make install` links the command into `/usr/local/bin` when
 it can, or prints the line to add to `~/.zshrc`.
 
-### What `make cert` asks for, and why
+### What `make cert` does, and its trade-off
 
 macOS ties the Microphone and Accessibility permissions to an app's code signature. A plain local
 build is signed "ad hoc", and that signature changes on every rebuild, so macOS forgets both
 permissions each time you update.
 
 `make cert` creates a self-signed certificate named `freespr-codesign` in your login keychain and
-trusts it for code signing only. Only Apple's `codesign` tool may use its private key. macOS asks
-for your login password once to trust it. On your first `make install` afterwards, macOS may ask
-whether `codesign` may use the key: click **Always Allow**. From then on, rebuilds keep your
-permissions.
+trusts it for code signing only. macOS asks for your login password once to trust it. On your
+first `make install` afterwards, macOS may ask whether `codesign` may use the key: click **Always
+Allow**. From then on, rebuilds keep your permissions.
 
-The certificate never leaves your Mac and isn't an Apple Developer ID; nothing is notarized. You
-can skip `make cert` and re-grant both permissions after each update instead.
+**The trade-off.** Once `codesign` may use the key, any other program running as you can run
+`codesign` too and sign its own code as FreeSPR. Code signed that way gets FreeSPR's Microphone and
+Accessibility permissions, and can read the OpenAI API key FreeSPR stored, without asking you. It
+only needs your login keychain unlocked to sign, which it normally is whenever you're logged in,
+and the signed code keeps working after that. Accessibility lets an app watch your keystrokes and
+control other apps. Use `make cert` only on a Mac where you trust what you run; otherwise skip it
+and re-grant both permissions after each update.
+
+`make cert` doesn't upload the certificate or its key anywhere. It isn't an Apple Developer ID,
+and nothing is notarized.
 
 ## Permissions
 
@@ -90,8 +97,8 @@ FreeSPR sends your words to OpenAI on every dictation. Know what that means befo
   terms; FreeSPR can't change them. Your use is also covered by OpenAI's
   [usage policies](https://openai.com/policies/usage-policies).
 - **On your Mac:** each recording is a temporary WAV file, deleted once it's been sent for
-  transcription. One left behind because FreeSPR stopped mid-recording is deleted the next time
-  it starts, once it's 15 minutes old, or by `freespr uninstall --purge`. The log at `~/Library/Logs/freespr.log` records events and character counts,
+  transcription. One left behind because FreeSPR stopped mid-recording is deleted when FreeSPR
+  starts and finds it unchanged for at least 15 minutes, or by `freespr uninstall --purge`. The log at `~/Library/Logs/freespr.log` records events and character counts,
   never what you said. When OpenAI returns an error, its message is logged with anything shaped
   like an API key masked. Your API key is stored in the macOS Keychain (service
   `freespr`), never in a file.
